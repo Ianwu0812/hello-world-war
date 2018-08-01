@@ -1,27 +1,52 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.efsavage</groupId>
+	<groupId>name.ianwu</groupId>
 	<artifactId>hello-world-war</artifactId>
 	<version>1.0.0</version>
 	<packaging>war</packaging>
 	<name>Hello World Web Application Repository</name>
 	<description>Simplest possible Java Webapp</description>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.7</java.version>
+		<docker.image.prefix>ianwu</docker.image.prefix>
+
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.5.v20120716</version>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
 				<configuration>
-					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.3.6</version>
+				<configuration>
+					<repository>${docker.image.prefix}/${project.artifactId}</repository>
+					<buildArgs>
+						<WAR_FILE>target/${project.build.finalName}.war</WAR_FILE>
+					</buildArgs>
+					<pullNewerImage>false</pullNewerImage>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
